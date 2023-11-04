@@ -1,0 +1,30 @@
+version: '3'
+services:
+  php-environment:
+    container_name: studyglobe-php-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - 8080:80
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: pass@123
+      MYSQL_DATABASE: studyglobe
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: studyglobe-phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - 8081:80
